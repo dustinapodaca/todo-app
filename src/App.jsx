@@ -1,11 +1,16 @@
-import React from 'react';
-
+// import React from 'react';
+import { SettingsProvider } from './Context/Settings';
 import ToDo from './Components/ToDo';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <ToDo />
-    );
-  }
-}
+const App = () => {
+  return (
+    <>
+      <SettingsProvider>
+        <ToDo />
+      </SettingsProvider>
+    </>
+  )
+};
+
+export default App;
+

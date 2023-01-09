@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useForm from '../../Hooks/form.jsx';
+import useForm from '../../Hooks/Form.jsx';
 
 import { v4 as uuid } from 'uuid';
 

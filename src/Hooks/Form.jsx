@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const useForm = (callback, defaultValues = {}) => {
   const [values, setValues] = useState({});
@@ -10,15 +10,15 @@ const useForm = (callback, defaultValues = {}) => {
 
   const handleChange = (event) => {
     let name, value;
-    if (typeof event === "object") {
+    if (typeof event === 'object') {
       name = event.target.name;
       value = event.target.value;
     } else {
-      console.log("event from slider", event);
+      console.log('event from slider', event);
       // hard coded for Mantine slider functionality
-      // change "difficulty" language if desired
+      // change 'difficulty' language if desired
       // change name dynamically if doing stretch goal!
-      name = "difficulty";
+      name = 'difficulty';
       value = event;
     }
 

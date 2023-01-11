@@ -40,6 +40,8 @@ const settingsReducer = (state, action) => {
       };
     case "SET_INCOMPLETE":
       return { ...state, incomplete: payload };
+    case "CHANGE_DIFFICULTY":
+      return { ...state, difficulty: payload };
     default:
       return state;
   }

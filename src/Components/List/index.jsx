@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState } from 'react';
-import { useSettings } from '../../Context/Settings';
+import React, { useState } from "react";
+import { useSettings } from "../../Context/Settings";
 import { Card, Text, Button, Pagination, createStyles } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
@@ -31,8 +30,10 @@ const List = (props) => {
 
   const [page, setPage] = useState(1);
 
-  const filteredList = state.showCompleted ? list : list.filter((item) => !item.complete);
-  const itemsPerPage = 3;
+  const filteredList = state.showCompleted
+    ? list
+    : list.filter((item) => !item.complete);
+  const itemsPerPage = state.displayNum;
   const pages = Math.ceil(filteredList.length / itemsPerPage);
   const start = (page - 1) * itemsPerPage;
   const end = start + itemsPerPage;
@@ -52,9 +53,7 @@ const List = (props) => {
             <Button onClick={() => toggleComplete(item.id)}>
               Toggle Complete
             </Button>
-            <Button onClick={() => deleteItem(item.id)}>
-              Delete
-            </Button>
+            <Button onClick={() => deleteItem(item.id)}>Delete</Button>
           </Card.Section>
         </Card>
       ))}
@@ -66,6 +65,6 @@ const List = (props) => {
       />
     </>
   );
-}
+};
 
 export default List;

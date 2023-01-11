@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
-import useForm from "../../Hooks/Form.jsx";
+import React, { useEffect } from 'react';
+import useForm from '../../Hooks/Form.jsx';
 import List from '../List';
-import { useSettings } from "../../Context/Settings";
+import SettingsForm from '../SettingsForm';
+import { useSettings } from '../../Context/Settings';
+
+//router imports
 
 //matine imports 
 import {
@@ -12,16 +15,15 @@ import {
   Text,
   Button,
   createStyles,
-} from "@mantine/core";
+} from '@mantine/core';
 
-import { v4 as uuid } from "uuid";
-import { ClassNames } from "@emotion/react";
+import { v4 as uuid } from 'uuid';
 
 const useStyles = createStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   card: {
     width: 400,
@@ -52,81 +54,89 @@ const ToDo = () => {
     item.id = uuid();
     item.complete = false;
     console.log(item);
-    dispatch({ type: "ADD_ITEM", payload: item });
+    dispatch({ type: 'ADD_ITEM', payload: item });
   }
   
   let list = state.list;
   let incomplete = state.incomplete;
   
   function deleteItem(id) {
-    dispatch({ type: "DELETE_ITEM", payload: id });
+    dispatch({ type: 'DELETE_ITEM', payload: id });
   }
   
   function toggleComplete(id) {
-    dispatch({ type: "TOGGLE_COMPLETE", payload: id });
+    dispatch({ type: 'TOGGLE_COMPLETE', payload: id });
+    dispatch({ type: "TOGGLE_COMPLETED", payload: id });
   }
   
   function changeDifficulty(value) {
-    dispatch({ type: "CHANGE_DIFFICULTY", payload: value });
+    dispatch({ type: 'CHANGE_DIFFICULTY', payload: value });
   }
   
   useEffect(() => {
     let incompleteCount = list.filter((item) => !item.complete).length;
-    dispatch({ type: "SET_INCOMPLETE", payload: incompleteCount });
+    dispatch({ type: 'SET_INCOMPLETE', payload: incompleteCount });
     document.title = `To Do List: ${state.incomplete}`;
     // linter will want 'incomplete' added to dependency array unnecessarily.
     // disable code used to avoid linter warning
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list]);
-  
+
+  function updateSettings(settings) {
+    dispatch({ type: 'TOGGLE_COMPLETED', payload: settings.showCompleted });
+    dispatch({ type: 'DISPLAY_ITEMS', payload: settings.displayNum });
+  }
   
   return (
     <>
-      <ClassNames>
-        {({ cx }) => (
-          <>
-            <Grid className={cx(classes.root)}>
-              <Card className={cx(classes.card)}>
-                <form onSubmit={handleSubmit}>
-                  <TextInput
-                    className={cx(classes.input)}
-                    label="To Do Item"
-                    name="text"
-                    onChange={handleChange}
-                  />
-                  <TextInput
-                    className={cx(classes.input)}
-                    label="Assigned To"
-                    name="assignee"
-                    onChange={handleChange}
-                  />
-                  <Text className={cx(classes.input)}>Difficulty</Text>
-                  <Slider
-                    className={cx(classes.slider)}
-                    label={state.difficulty}
-                    name="difficulty"
-                    onChange={(value) => changeDifficulty(value)}
-                    min={1}
-                    max={5}
-                    defaultValue={state.difficulty}
-                  />
-                  <Button className="button" type="submit">
-                    Add Item
-                  </Button>
-                </form>
-              </Card>
-            </Grid>
-            <Grid className={cx(classes.root)}>
-              <Text className={cx(classes.input)}>There are {incomplete} Items To Complete</Text>
-              <List
-                list={list}
-                toggleComplete={toggleComplete}
-                deleteItem={deleteItem}
-              />
-            </Grid>
-          </>
-        )}
-      </ClassNames>
+      <Grid className={classes.root}>
+        <SettingsForm
+          currentSettings={{state}}
+          handleChange={handleChange}
+          handleSubmit={(e) => handleSubmit(e, updateSettings)}
+          className={classes.input}
+        />
+        <Card className={classes.card}>
+          <Text className={classes.input}>Add To Do Item</Text>
+          <form onSubmit={handleSubmit}>
+            <TextInput
+              className={classes.input}
+              label="To Do Item"
+              name="text"
+              onChange={handleChange}
+            />
+            <TextInput
+              className={classes.input}
+              label="Assigned To"
+              name="assignee"
+              onChange={handleChange}
+            />
+            <Text className={classes.input}>Difficulty</Text>
+            <Slider
+              className={classes.slider}
+              label={state.difficulty}
+              name="difficulty"
+              onChange={(value) => changeDifficulty(value)}
+              min={1}
+              max={5}
+              defaultValue={state.difficulty}
+            />
+            <Button className="button" type="submit">
+              Add Item
+            </Button>
+          </form>
+        </Card>
+      </Grid>
+      <Grid className={classes.root}>
+        <Text className={classes.input}>
+          There are {incomplete} Items To Complete
+        </Text>
+        <List
+          list={list}
+          toggleComplete={toggleComplete}
+          deleteItem={deleteItem}
+        />
+      </Grid>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import useForm from '../../Hooks/Form.jsx';
 import List from '../List';
-import SettingsForm from '../SettingsForm';
+// import SettingsForm from '../SettingsForm';
 import { useSettings } from '../../Context/Settings';
 
 //router imports
@@ -81,21 +81,13 @@ const ToDo = () => {
     // disable code used to avoid linter warning
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list]);
-
-  function updateSettings(settings) {
-    dispatch({ type: 'TOGGLE_COMPLETED', payload: settings.showCompleted });
-    dispatch({ type: 'DISPLAY_ITEMS', payload: settings.displayNum });
-  }
   
   return (
     <>
       <Grid className={classes.root}>
-        <SettingsForm
-          currentSettings={{state}}
-          handleChange={handleChange}
-          handleSubmit={(e) => handleSubmit(e, updateSettings)}
+        {/* <SettingsForm
           className={classes.input}
-        />
+        /> */}
         <Card className={classes.card}>
           <Text className={classes.input}>Add To Do Item</Text>
           <form onSubmit={handleSubmit}>

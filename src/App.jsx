@@ -1,17 +1,19 @@
 import React from 'react';
-import Header from './Components/Header';
-import Footer from './Components/Footer';
 import AppRoutes from './Routes/routes';
 import { SettingsProvider } from './Context/Settings';
+import AuthProvider from './Context/Auth';
+import { MantineProvider } from '@mantine/core';
 
 const App = () => {
   return (
     <>
-      <SettingsProvider>
-        <Header />
-        <AppRoutes />
-        <Footer />
-      </SettingsProvider>
+      <MantineProvider theme={{ colorScheme: 'dark' }} withGlobalStyles withNormalizeCSS>
+        <AuthProvider>
+          <SettingsProvider>
+            <AppRoutes />
+          </SettingsProvider>
+        </AuthProvider>
+      </MantineProvider>
     </>
   )
 };

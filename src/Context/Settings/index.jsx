@@ -86,8 +86,3 @@ const useSettings = () => {
 };
 
 export { SettingsProvider, useSettings };
-
-
-
-
- 

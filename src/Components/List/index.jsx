@@ -59,7 +59,7 @@ const List = (props) => {
       ))}
       <Pagination
         className={classes.pagination}
-        pages={pages}
+        total={pages}
         page={page}
         onChange={setPage}
       />

@@ -17,33 +17,49 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const SettingsForm = (props) => {
-  const { handleChange, handleSubmit } = props;
+const SettingsForm = () => {
   const { state, dispatch, saveSettings } = useSettings();
-  // const [settings, setSettings] = useState(state);
-  // setSettings handled by context
+  // const { handleChange, handleSubmit } = props;
+  const [show, setShow] = useState(false);
 
   const { classes } = useStyles();
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('submitting');
+    setShow(true);
+    saveSettings();
+  };
+
   return (
     <form onSubmit={handleSubmit} className={classes.root}>
+      <Text>Settings</Text>
+      <Checkbox
+        label="Show Completed"
+        checked={state.showCompleted}
+        onChange={() => dispatch({ type: 'TOGGLE_COMPLETED' })}
+        className={classes.input}
+      />
       <TextInput
-          className={classes.input}
-          label="Display Number"
-          name="displayNum"
-          value={state.displayNum}
-          onChange={handleChange}
-        />
-        <Checkbox
-          className={classes.input}
-          label="Show Completed"
-          name="showCompleted"
-          value={state.showCompleted}
-          onChange={handleChange}
-        />
-        <Button className={classes.button} type="submit">Save Changes</Button>
+        label="Number of Items to Display"
+        type="number"
+        value={state.displayNum}
+        onChange={(e) => dispatch({ type: 'DISPLAY_ITEMS', payload: e.target.value })}
+        className={classes.input}
+      />
+      <Checkbox
+        label="Sort by Difficulty"
+        checked={state.sort}
+        onChange={() => dispatch({ type: 'TOGGLE_SORT' })}
+        className={classes.input}
+      />
+      <Button type="submit" className={classes.button}>
+        Save
+      </Button>
+      {show && <Text>Settings Saved</Text>}
     </form>
   );
 };
 
 export default SettingsForm;
+

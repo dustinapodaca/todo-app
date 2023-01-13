@@ -3,7 +3,8 @@ import useForm from '../../Hooks/Form.jsx';
 import List from '../List';
 // import SettingsForm from '../SettingsForm';
 import { useSettings } from '../../Context/Settings';
-
+import axios from 'axios';
+// import Auth from '../../Context/Auth';
 //router imports
 
 //matine imports 
@@ -49,24 +50,74 @@ const ToDo = () => {
   
   const { handleChange, handleSubmit } = useForm(addItem, state);
   const { classes } = useStyles();
+
+
+//   Alter the Add, Toggle Complete, and Delete functions within your to do application to use your API instead of in memory state.
+// Fetch the current list of items from the database on application start.
+// Whenever you add/update/delete an item, refresh the state so the user can instantly see the change.
+// Consider: Do you re-fetch from the server every time you make a change?
+// If so, how?
+// If not, how will you stay in sync?
+
+  useEffect(() => {
+    async function fetchData() {
+      let response = await axios.get('https://api-js401.herokuapp.com/api/v1/todo');
+      const data = response.data.results;
+      console.log(data);
+      dispatch({ type: 'GET_ITEMS', payload: data });
+    }
+    fetchData();
+  }, [dispatch]);
+
   
-  function addItem(item) {
+  async function addItem(item) {
     item.id = uuid();
     item.complete = false;
     console.log(item);
-    dispatch({ type: 'ADD_ITEM', payload: item });
+    try {
+      const response = await axios.post('https://api-js401.herokuapp.com/api/v1/todo', item);
+      if (response.status === 200 && response.data) {
+        dispatch({ type: 'ADD_ITEM', payload: response.data });
+      } else {
+        console.error('Error adding item');
+      }
+    } catch (e) {
+      console.error(e);
+    }  
   }
   
   let list = state.list;
   let incomplete = state.incomplete;
   
-  function deleteItem(id) {
-    dispatch({ type: 'DELETE_ITEM', payload: id });
+  async function deleteItem(id) {
+    try {
+      const response = await axios.delete(`https://api-js401.herokuapp.com/api/v1/todo/${id}`);
+      if (response.status === 200) {
+        const newList = list.filter((item) => item.id !== id);
+        dispatch({ type: 'DELETE_ITEM', payload: newList });
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
   
-  function toggleComplete(id) {
-    dispatch({ type: 'TOGGLE_COMPLETE', payload: id });
-    dispatch({ type: "TOGGLE_COMPLETED", payload: id });
+  async function toggleComplete(id) {
+    try {
+      const response = await axios.put(`https://api-js401.herokuapp.com/api/v1/todo/${id}`, {
+        complete: !list.complete,
+      });
+      if (response.status === 200) {
+        const newList = list.map((item) => {
+          if (item.id === id) {
+            item.complete = !item.complete;
+          }
+          return item;
+        });
+        dispatch({ type: 'TOGGLE_COMPLETE', payload: newList });
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
   
   function changeDifficulty(value) {

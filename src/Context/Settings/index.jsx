@@ -41,6 +41,8 @@ const settingsReducer = (state, action) => {
       return { ...state, incomplete: payload };
     case 'CHANGE_DIFFICULTY':
       return { ...state, difficulty: payload };
+    case 'GET_ITEMS':
+      return { ...state, list: payload };
     default:
       return state;
   }

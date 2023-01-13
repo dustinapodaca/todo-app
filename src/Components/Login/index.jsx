@@ -25,6 +25,11 @@ const Login = () => {
 
   const { classes } = useStyles();
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    login(username, password);
+  };
+
   const handleLogout = () => {
     setUsername('');
     setPassword('');
@@ -32,36 +37,36 @@ const Login = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <form className={classes.root} onSubmit>
       <If condition={loggedIn}>
         <Then>
-          <Text>Welcome {username}</Text>
+          <Text>Logged In</Text>
           <Button onClick={handleLogout}>Logout</Button>
         </Then>
         <Else>
           <Text>Login</Text>
           <TextInput
             label="Username"
+            type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className={classes.input}
           />
           <TextInput
             label="Password"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={classes.input}
           />
-          <Button
-            onClick={() => login(username, password)}
-            className={classes.button}
-          >
+          <Button type="submit" className={classes.button} onClick={handleLogin}>
             Login
           </Button>
         </Else>
       </If>
-    </div>
+    </form>
   );
 };
 
 export default Login;
+
